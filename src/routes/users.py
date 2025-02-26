@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from controllers.users.create_new_user_controller import create_user
+from controllers.users.login_controller import login
 
 user_routes = APIRouter(tags=["Users"])
 
@@ -30,3 +31,22 @@ user_routes.post('/user', responses={
         }
     }
 }, status_code=201)(create_user)
+
+user_routes.post('/login', responses={
+    401: {
+        "description": "UNAUTHORIZED",
+        "content": {
+            "application/json": {
+                "example": {"detail": "E-mail ou senha inválidos."}
+            }
+        }
+    },
+    500: {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+            "application/json": {
+                "example": {"detail": "Não foi possível fazer o login, tente novamente mais tarde."}
+            }
+        }
+    }
+})(login)
