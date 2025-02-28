@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from controllers.superitendences.get_all_superitendences_controller import get_superitendences
+from controllers.superitendences.create_superitendence_controller import create_superitendence
 
 superitendence_routes = APIRouter(tags=['Superitendences'])
 
@@ -30,3 +31,5 @@ superitendence_routes.get('/superitendences', responses={
         }
     }
 })(get_superitendences)
+
+superitendence_routes.post('/superitendence')(create_superitendence)
