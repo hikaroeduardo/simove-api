@@ -1,7 +1,14 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, Boolean, DateTime, ForeignKey
-from datetime import datetime
+from sqlalchemy import String, Boolean, DateTime, ForeignKey, Date, Time, Enum
+from datetime import datetime, date, time
 from typing import List
+from enum import Enum as EnumPython
+
+class RequestsStatus(EnumPython):
+    ABERTO = "aberto"
+    ACEITO = "aceito"
+    RECUSADO = "recusado"
+    FINALIZADO = "finalizado"
 
 class Base(DeclarativeBase):
     pass
@@ -21,6 +28,7 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     superitendence: Mapped["Superitendence"] = relationship(back_populates="users")
+    requests: Mapped[List["Request"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 class Superitendence(Base):
     __tablename__ = "superitendences"
@@ -33,3 +41,22 @@ class Superitendence(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     users: Mapped[List["User"]] = relationship(back_populates="superitendence", cascade="all, delete-orphan")
+    requests: Mapped[List["Request"]] = relationship(back_populates="superitendence", cascade="all, delete-orphan")
+
+class Request(Base):
+    __tablename__ = "requests"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    id_superitendence: Mapped[int] = mapped_column(ForeignKey("superitendences.id"))
+    departure_location: Mapped[str] = mapped_column(String(50))
+    destination_location: Mapped[str] = mapped_column(String(50))
+    date_request: Mapped[date] = mapped_column(Date, default=datetime.today)
+    time_request: Mapped[time] = mapped_column(Time, default=lambda: datetime.now().time())
+    number_peoples: Mapped[int] = mapped_column(default=1)
+    status: Mapped[RequestsStatus] = mapped_column(Enum(RequestsStatus), default=RequestsStatus.ABERTO)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    superitendence: Mapped["Superitendence"] = relationship(back_populates="requests")
+    user: Mapped["User"] = relationship(back_populates="requests")
