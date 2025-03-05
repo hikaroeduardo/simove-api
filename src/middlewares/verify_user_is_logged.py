@@ -4,12 +4,7 @@ from jwt.exceptions import InvalidSignatureError
 from dotenv import load_dotenv
 from fastapi import Header, status, HTTPException
 from typing import Annotated
-'''
-[x] Pegar token
-[x] Verificar se é bearer
-[] Descriptografar bearer
-[] Retornar ID
-'''
+
 load_dotenv()
 
 def user_is_logged(authorization: Annotated[str, Header()]):

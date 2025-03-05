@@ -10,5 +10,3 @@ def select_user_by_id(id: str):
         user = session.scalars(query).first()
 
         return user
-
-        
