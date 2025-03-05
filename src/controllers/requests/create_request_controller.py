@@ -15,6 +15,7 @@ async def create_request_controller(data_request: CreateRequestSchema, id_user: 
         create(departure_location, destination, number_peoples, id_user)
 
         return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
             content={
                 "success": "Solicitação criada com sucesso!"
             }
