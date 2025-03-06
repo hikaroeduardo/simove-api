@@ -1,12 +1,13 @@
-from fastapi import status, HTTPException
+from fastapi import status, HTTPException, Depends
 from fastapi.responses import JSONResponse
 
 from schemas.create_drivers import CreateDriversSchema
+from middlewares.verify_user_is_admin import user_is_admin
 from services.drivers.create_driver_service import create
 from errors.drivers.driver_already_exists import DriverAlreadyExistsError
 from errors.global_error import GlobalError
 
-async def create_driver(data_driver: CreateDriversSchema):
+async def create_driver(data_driver: CreateDriversSchema, id_user: int = Depends(user_is_admin)):
     name = data_driver.name
     cpf = data_driver.cpf
     registration = data_driver.registration
