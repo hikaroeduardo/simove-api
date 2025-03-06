@@ -60,3 +60,15 @@ class Request(Base):
 
     superitendence: Mapped["Superitendence"] = relationship(back_populates="requests")
     user: Mapped["User"] = relationship(back_populates="requests")
+
+class Driver(Base):
+    __tablename__ = "drivers"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50))
+    cpf: Mapped[str] = mapped_column(String(14))
+    registration: Mapped[str] = mapped_column(String(10))
+    phone: Mapped[str] = mapped_column(String(15), nullable=True)
+    status: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
