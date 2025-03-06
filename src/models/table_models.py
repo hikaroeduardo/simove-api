@@ -1,7 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import String, Boolean, DateTime, ForeignKey, Date, Time, Enum
 from datetime import datetime, date, time
-from typing import List
+from typing import List, Optional
 from enum import Enum as EnumPython
 
 class RequestsStatus(EnumPython):
@@ -67,7 +67,7 @@ class Driver(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     cpf: Mapped[str] = mapped_column(String(14))
-    registration: Mapped[str] = mapped_column(String(10))
+    registration: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
     phone: Mapped[str] = mapped_column(String(15), nullable=True)
     status: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
