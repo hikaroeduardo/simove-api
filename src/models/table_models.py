@@ -1,5 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, Date, Time, Enum
+from sqlalchemy import String, Boolean, DateTime, ForeignKey, Date, Time, Enum, CHAR
 from datetime import datetime, date, time
 from typing import List, Optional
 from enum import Enum as EnumPython
@@ -72,3 +72,28 @@ class Driver(Base):
     status: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+class Vehicle(Base):
+    __tablename__ = "vehicles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    model: Mapped[str] = mapped_column(String(20))
+    brand: Mapped[str] = mapped_column(String(20))
+    plate: Mapped[str] = mapped_column(String(10))
+    year: Mapped[str] = mapped_column(String(10))
+    color: Mapped[str] = mapped_column(String(20))
+    id_fuel: Mapped[int] = mapped_column(ForeignKey("fuels.id"))
+    renavam: Mapped[str] = mapped_column(CHAR(11))
+    status: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    fuel: Mapped["Fuel"] = relationship(back_populates="vehicles")
+
+class Fuel(Base):
+    __tablename__ = "fuels"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(10))
+
+    vehicles: Mapped[List["Vehicle"]] = relationship(back_populates="fuel", cascade="all, delete-orphan")
